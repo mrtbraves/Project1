@@ -27,8 +27,15 @@ class AuthController extends Controller
     {
         $postData = $this->request->getPost();
 
-        echo 'Authenticate the above two different ways' . var_dump($postData);
+        //echo 'Authenticate the above two different ways' . var_dump($postData);
+        if ($postData->authType === 'file') {
+            $auth = new \Common\Authentication\FileBased($postData->username, $postData->password);
+        } else if ($postData->authType === 'memory') {
+            $auth = new \Common\Authentication\InMemory($postData->username, $postData->password);
+        } else if ($postData->authType === 'database') {
+            $auth = new \Common\Authentication\Database($postData->username, $postData->password);
+        }
 
-        // example code: $auth = new Authentication($postData['username'], $postData['password']);
+        echo $auth->authenticate();
     }
 }
